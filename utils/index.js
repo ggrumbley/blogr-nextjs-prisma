@@ -22,8 +22,7 @@ export const initBling = () => {
 
 /*
   BLING FETCH
-  A tiny wrapper around fetch(), borrowed from
-  https://kentcdodds.com/blog/replace-axios-with-a-simple-custom-fetch-wrapper
+  A tiny Axios-like wrapper around fetch()
 */
 export const $fetch = async (endpoint, { body, ...customConfig } = {}) => {
   const headers = { 'Content-Type': 'application/json' };

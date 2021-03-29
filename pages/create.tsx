@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Router from 'next/router';
 
 import Layout from '../components/Layout';
-import { $fetch } from '../lib/bling';
+import { $fetch } from '../utils';
 const Draft: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');

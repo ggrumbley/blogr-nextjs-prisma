@@ -6,8 +6,8 @@ import ReactMarkdown from 'react-markdown';
 
 import Layout from '../../components/Layout';
 import { PostProps } from '../../components/Post';
+import { $fetch } from '../../utils';
 import prisma from '../../lib/prisma';
-import { $fetch } from '../../lib/bling';
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const post = await prisma.post.findUnique({
@@ -30,6 +30,11 @@ const publishPost = async (id: number): Promise<void> => {
   await Router.push('/');
 };
 
+const deletePost = async (id: number): Promise<void> => {
+  await $fetch.delete(`/api/post/${id}`);
+  await Router.push('/');
+};
+
 const Post: React.FC<PostProps> = (props) => {
   const [session, loading] = useSession();
 
@@ -37,6 +42,8 @@ const Post: React.FC<PostProps> = (props) => {
 
   const userHasValidSession = Boolean(session);
   const postBelongsToUser = session?.user?.email === props.author?.email;
+
+  const validated = userHasValidSession && postBelongsToUser;
 
   let title = props.title;
   if (!props.published) title = `${title} (Draft)`;
@@ -47,9 +54,10 @@ const Post: React.FC<PostProps> = (props) => {
         <h2>{title}</h2>
         <p>By {props?.author?.name || 'Unknown author'}</p>
         <ReactMarkdown source={props.content} />
-        {!props.published && userHasValidSession && postBelongsToUser && (
+        {!props.published && validated && (
           <button onClick={() => publishPost(props.id)}>Publish</button>
         )}
+        {validated && <button onClick={() => deletePost(props.id)}>Delete</button>}
       </div>
       <style jsx>{`
         .page {

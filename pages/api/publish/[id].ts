@@ -9,6 +9,6 @@ const handle = async (req, res) => {
   });
 
   res.json(post);
-}
+};
 
 export default handle;
